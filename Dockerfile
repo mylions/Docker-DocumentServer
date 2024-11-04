@@ -111,8 +111,12 @@ ENV COMPANY_NAME=$COMPANY_NAME \
     DS_PLUGIN_INSTALLATION=false \
     DS_DOCKER_INSTALLATION=true
 
-RUN PACKAGE_FILE="${COMPANY_NAME}-${PRODUCT_NAME}${PRODUCT_EDITION}${PACKAGE_VERSION:+_$PACKAGE_VERSION}_${TARGETARCH:-$(dpkg --print-architecture)}.deb" && \
-    wget -q -P /tmp "$PACKAGE_BASEURL/$PACKAGE_FILE" && \
+#copy deb文件到 tmp目录下
+COPY onlyoffice-documentserver_0.0.0-0_amd64.deb /tmp/
+#RUN PACKAGE_FILE="${COMPANY_NAME}-${PRODUCT_NAME}${PRODUCT_EDITION}${PACKAGE_VERSION:+_$PACKAGE_VERSION}_${TARGETARCH:-$(dpkg --print-architecture)}.deb" && \
+#使用本地的deb进行打包
+RUN PACKAGE_FILE="onlyoffice-documentserver_0.0.0-0_amd64.deb" && \
+    #wget -q -P /tmp "$PACKAGE_BASEURL/$PACKAGE_FILE" && \
     apt-get -y update && \
     service postgresql start && \
     apt-get -yq install /tmp/$PACKAGE_FILE && \
